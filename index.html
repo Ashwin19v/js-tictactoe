@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+.cell{
+    width:100px;
+    height:100px;
+    border: 5px solid rgb(240, 56, 56);
+    font-size: 100px;
+    font-weight: bolder;
+    cursor: pointer;
+    line-height: 80px;
+
+}
+#container{
+    font-family:cursive;
+    text-align: center  ;
+}
+#cell{
+    display: grid;
+    grid-template-columns: repeat(3,auto);
+    width:300px;
+    margin: auto;
+    }
+    h1{
+        text-align: center;
+    }
+</style>
+<body>
+    <div id="container">
+        <h1>Tic Tac Toe</h1>
+        <div id="cell">
+            <div cellIndex="0" class="cell"></div>
+            <div cellIndex="1" class="cell"></div>
+            <div cellIndex="2" class="cell"></div>
+            <div cellIndex="3" class="cell"></div>
+            <div cellIndex="4" class="cell"></div>
+            <div cellIndex="5" class="cell"></div>
+            <div cellIndex="6" class="cell"></div>
+            <div cellIndex="7" class="cell"></div>
+            <div cellIndex="8" class="cell"></div>
+        </div>
+        <h2 id="status"></h2>
+        <button id="reset">Restart</button>
+    </div>
+
+    <script>
+        const cells = document.querySelectorAll('.cell');
+        const status = document.querySelector('#status');
+        const btn = document.querySelector('#reset');
+        const win = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+        let opt = ["", "", "", "", "", "", "", "", ""];
+        let currentplayer = "x";
+        let run = false;
+        start();
+    
+        function start() {
+            cells.forEach(cell => cell.addEventListener("click", click));
+            btn.addEventListener("click", reset);
+            status.textContent = `${currentplayer} turn`;
+            run = true;
+        }
+    
+        function click() {
+            const cellIndex = this.getAttribute("cellIndex");
+            if (opt[cellIndex] !== "" || !run) {
+                return;
+            }
+            update(this, cellIndex);
+            check();
+        }
+    
+        function update(cell, index) {
+            opt[index] = currentplayer;
+            cell.textContent = currentplayer;
+        }
+    
+        function change() {
+            currentplayer = (currentplayer == "x") ? "o" : "x";
+            status.textContent = `${currentplayer} turn`;
+        }
+    
+        function check() {
+            let won = false;
+            for (let i = 0; i < win.length; i++) {
+                const comd = win[i];
+                const cellA = opt[comd[0]];
+                const cellB = opt[comd[1]];
+                const cellC = opt[comd[2]];
+    
+                if (cellA === "" || cellB === "" || cellC === "") {
+                    continue;
+                }
+                if (cellA === cellB && cellB === cellC) {
+                    won = true;
+                    break;
+                }
+            }
+            if (won) {
+                status.textContent = `${currentplayer} won`;
+                run = false;
+            } else if (!opt.includes("")) {
+                status.textContent = "draw";
+                run = false;
+            } else {
+                change();
+            }
+        }
+    
+        function reset() {
+            window.location.reload();
+        }
+    </script>
+    
+</body>
+</html>
